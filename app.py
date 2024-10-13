@@ -18,7 +18,7 @@ use = db.users
 def add():
     if request.method == 'GET':
         data = ent.find()
-        return render_template('user_home.html', data=data)
+        return render_template('index.html', data=data)
     if request.method == 'POST':
         print(request.form)
         return redirect('/')
@@ -35,7 +35,12 @@ def about():
 
 @app.route('/create', methods=['GET','POST'])
 def create():
-    return render_template('create.html')
+    if request.method == 'GET':
+        return render_template('create.html')
+    if request.method == 'POST':
+        timestamp = datetime.datetime.now()
+        k = request.form
+        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'url': k['url']})
 
 @app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
