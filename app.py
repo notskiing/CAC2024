@@ -54,7 +54,7 @@ def log():
             print('user exists, now finding password')
             if pbkdf2_sha256.verify(user_pass, u['password']) == True:
                 print('login success!')
-                return redirect('/post')
+                return redirect('/dashboard')
             else:
                 print('404, password not found')
                 return redirect('/login')
