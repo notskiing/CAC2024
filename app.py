@@ -7,12 +7,12 @@ import json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
-# import pymongo
-# client = pymongo.MongoClient("mongodb+srv://test_user:TzCC3SjGsiKtP9Mi@cluster0.9jbfb.mongodb.net/jumbledwords?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+import pymongo
+client = pymongo.MongoClient("mongodb+srv://test_user:TzCC3SjGsiKtP9Mi@cluster0.9jbfb.mongodb.net/jumbledwords?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
 
-# db = client.blog
-# ent = db.entries
-# use = db.users
+db = client.blog
+ent = db.entries
+use = db.users
 
 @app.route('/', methods=['GET','POST'])
 def add():
@@ -45,27 +45,36 @@ def log():
         print(request.form)
         user_name = request.form['username']
         user_pass = request.form['password']
-        # u = use.find_one({'username': user_name})
-        # if u != None:
-        #     print('user exists, now finding password')
-        #     if pbkdf2_sha256.verify(user_pass, u['password']) == True:
-        #         print('login success!')
-        #         return redirect('/post')
-        #     else:
-        #         print('404, password not found')
-        #         return redirect('/login')
-        # else:
-        print('404, user not found')
-        return redirect('/login')
-    # return redirect('/login')
+        u = use.find_one({'username': user_name})
+        if u != None:
+            print('user exists, now finding password')
+            if pbkdf2_sha256.verify(user_pass, u['password']) == True:
+                print('login success!')
+                return redirect('/post')
+            else:
+                print('404, password not found')
+                return redirect('/login')
+        else:
+            print('404, user not found')
+            return redirect('/login')
+    return redirect('/login')
 
 @app.route('/messaging')
 def messaging():
     return render_template('messaging.html')
 
 @app.route('/register')
-def register():
-    return render_template('register.html')
+def register(): 
+    if request.method == 'GET':
+        return render_template('register.html')
+    if request.method == 'POST':
+        print(request.form)
+        l = request.form
+        upw = pbkdf2_sha256.hash(l['pw'])
+        print(upw) 
+        use.insert_one({'username': l['name'],'password': upw})
+        return redirect('/login')
+
 
 
 if __name__ == '__main__':
