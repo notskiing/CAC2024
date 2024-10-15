@@ -4,6 +4,7 @@ from passlib.hash import pbkdf2_sha256
 import datetime
 import random
 import json
+import base64
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
@@ -14,6 +15,8 @@ db = client.hocoproject
 ent = db.posts
 use = db.users
 
+app = Flask(__name__)
+
 @app.route('/', methods=['GET','POST'])
 def add():
     if request.method == 'GET':
@@ -22,12 +25,6 @@ def add():
     if request.method == 'POST':
         print(request.form)
         return redirect('/')
-
-app = Flask(__name__)
-
-@app.route('/', methods=['GET','POST'])
-def index():
-    return render_template('index.html')
 
 @app.route('/about', methods=['GET','POST'])
 def about():
@@ -40,11 +37,16 @@ def create():
     if request.method == 'POST':
         timestamp = datetime.datetime.now()
         k = request.form
-        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'url': k['url']})
+        print(request.form, request.files)
+        image = request.files['image']
+        print(image, base64.b64encode(image.read()))
+        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'image': base64.b64encode(image.read())})
+        return redirect('/dashboard')
 
 @app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
-    return render_template('dashboard.html')
+    if request.method == 'GET':
+        return render_template('dashboard.html')
 
 @app.route('/login', methods=['GET','POST'])
 def log():
@@ -72,6 +74,11 @@ def log():
 def messaging():
     return render_template('messaging.html')
 
+@app.route('/feed', methods=['GET','POST'])
+def feed():
+    if request.method == 'GET':
+        return render_template('feed.html')
+
 @app.route('/register', methods=['GET','POST'])
 def register(): 
     if request.method == 'GET':
@@ -85,4 +92,4 @@ def register():
         return redirect('/login')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5500)
