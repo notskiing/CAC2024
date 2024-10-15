@@ -38,9 +38,9 @@ def create():
         timestamp = datetime.datetime.now()
         k = request.form
         print(request.form, request.files)
-        image = request.files['image']
-        print(image, base64.b64encode(image.read()))
-        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'image': base64.b64encode(image.read())})
+        raw_image = request.files['image']
+        image = base64.b64encode(raw_image.read())
+        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'image': image.decode()})
         return redirect('/dashboard')
 
 @app.route('/dashboard', methods=['GET','POST'])
@@ -77,7 +77,8 @@ def messaging():
 @app.route('/feed', methods=['GET','POST'])
 def feed():
     if request.method == 'GET':
-        return render_template('feed.html')
+        data = ent.find()
+        return render_template('feed.html', data=data)
 
 @app.route('/register', methods=['GET','POST'])
 def register(): 
