@@ -21,7 +21,7 @@
 
 <body>
     <div class='container col-10'>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <br>
             <br>
             <br>
@@ -59,10 +59,9 @@
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                         <label for="validationCustom03">Image URL</label>
-                        <input type="text" class="form-control" id="validationCustom03" placeholder="url" name='url' required>
+                        <input type="file" class="form-control" name="image" id="customFile" accept="image/png, image/jpeg, image/jpg" />
                         <div class="invalid-feedback">
-                            Please provide an image URL.
-                            <p>note- the image URL needs to start with https:// or http:// so the webpage can recognize it</p>
+                            Please provide an image.
                         </div>
                     </div>
 
