@@ -23,6 +23,7 @@ client = pymongo.MongoClient(os.getenv("MONGO_URI"))
 
 db = client.hocoproject
 ent = db.posts
+msg = db.messages
 use = db.users
 
 @app.template_filter()
@@ -95,7 +96,30 @@ def log():
 
 @app.route('/messaging', methods=['GET','POST'])
 def messaging():
-    return render_template('messaging.html')
+    if request.method == 'GET':
+        return render_template('messaging.html')
+
+@app.route('/messaging/view', methods=['GET','POST'])
+def messaging_view():
+    if request.method == 'GET':
+        id = request.args.get("id")
+        #fetch existing chat from db
+        usable_messages = msg.find({
+            "sender": session["username"],
+            "receiver": id
+        })
+        return render_template('messagingview.html', messages=usable_messages)
+    if request.method == 'POST':
+        id = request.args.get("id")
+        print(request.form["message"])
+        message = {
+            "sender": session["username"],
+            "receiver": id,
+            "text": request.form["message"],
+            "timestamp": datetime.datetime.now(datetime.timezone.utc)
+        }
+        msg.insert_one(message)
+        return redirect("/messaging/view?id="+id)
 
 @app.route('/feed', methods=['GET','POST'])
 def feed():
