@@ -1,21 +1,38 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, session
 from bson.objectid import ObjectId
 from passlib.hash import pbkdf2_sha256
 import datetime
 import random
 import json
 import base64
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '123'
-
+import os
+from dotenv import load_dotenv
 import pymongo
-client = pymongo.MongoClient("mongodb+srv://test_user:55QmLnJdUpl3PcKz@cluster0.9jbfb.mongodb.net/hocoproject?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+import pytz
+from pytz import timezone
+import tzlocal
+
+load_dotenv()
+
+app = Flask(__name__)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+print(app.config)
+
+client = pymongo.MongoClient(os.getenv("MONGO_URI"))
 
 db = client.hocoproject
 ent = db.posts
 use = db.users
 
-app = Flask(__name__)
+@app.template_filter()
+
+def datetimefilter(value, format="%x %I:%M %p"):
+    tz = pytz.timezone(session["timezone"]) # timezone you want to convert to from UTC
+    utc = pytz.timezone('UTC')  
+    value = utc.localize(value, is_dst=None).astimezone(pytz.utc)
+    local_dt = value.astimezone(tz)
+    return local_dt.strftime(format)
 
 @app.route('/', methods=['GET','POST'])
 def add():
@@ -35,7 +52,7 @@ def create():
     if request.method == 'GET':
         return render_template('create.html')
     if request.method == 'POST':
-        timestamp = datetime.datetime.now()
+        timestamp = datetime.datetime.now(datetime.timezone.utc)
         k = request.form
         print(request.form, request.files)
         raw_image = request.files['image']
@@ -46,7 +63,10 @@ def create():
 @app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
     if request.method == 'GET':
-        return render_template('dashboard.html')
+        if "username" in session:
+            return render_template('dashboard.html')
+        else:
+            return redirect('/login')
 
 @app.route('/login', methods=['GET','POST'])
 def log():
@@ -54,13 +74,16 @@ def log():
         return render_template('login.html')
     if request.method == 'POST':
         print(request.form)
-        user_name = request.form['username']
-        user_pass = request.form['password']
-        u = use.find_one({'username': user_name})
+        username = request.form['username']
+        password = request.form['password']
+        user_tz = request.form['timezone']
+        session["timezone"] = user_tz
+        u = use.find_one({'username': username})
         if u != None:
             print('user exists, now finding password')
-            if pbkdf2_sha256.verify(user_pass, u['password']) == True:
+            if pbkdf2_sha256.verify(password, u['password']) == True:
                 print('login success!')
+                session["username"] = username
                 return redirect('/dashboard')
             else:
                 print('404, password not found')

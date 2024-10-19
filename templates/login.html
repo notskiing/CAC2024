@@ -21,12 +21,16 @@
         <h6>Password</h6> 
         <input class="form-control" type="password" name = 'password' placeholder="Default input">
         <br>
+        <input type="text" name="timezone" id="timezone" hidden>
         <br> 
         <button type = 'submit' class = "btn btn-dark">Submit</button>
     </form>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
-
+<script>
+    let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById("timezone").value = timezone
+</script>
 <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
