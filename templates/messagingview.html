@@ -68,7 +68,7 @@
                           <div class="card w-100">
                             <div class="card-header d-flex justify-content-between p-3">
                               <p class="fw-bold mb-0">{{current_msg['sender']}}</p>
-                              <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{current_msg['timestamp']}}</p>
+                              <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{current_msg['timestamp'] | datetimefilter}}</p>
                             </div>
                             <div class="card-body">
                               <p class="mb-0">
