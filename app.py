@@ -102,13 +102,18 @@ def messaging():
 @app.route('/messaging/view', methods=['GET','POST'])
 def messaging_view():
     if request.method == 'GET':
+        senders = []
         id = request.args.get("id")
         #fetch existing chat from db
+        all_messages = msg.find()
         usable_messages = msg.find({
-            "sender": session["username"],
-            "receiver": id
+            "$or":[{"sender": id, "receiver": session["username"]}, {"sender":session["username"], "receiver": id}]
         })
-        return render_template('messagingview.html', messages=usable_messages)
+        senders = db.messages.distinct("sender")
+        for person in senders:
+            if person == session["username"]:
+                senders.remove(person)
+        return render_template('messagingview.html', messages=usable_messages, senders=senders)
     if request.method == 'POST':
         id = request.args.get("id")
         print(request.form["message"])
