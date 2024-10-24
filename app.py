@@ -29,6 +29,8 @@ use = db.users
 @app.template_filter()
 
 def datetimefilter(value, format="%x %I:%M %p"):
+    if session["timezone"] == "":
+        session["timezone"] = "America/Los_Angeles"
     tz = pytz.timezone(session["timezone"]) # timezone you want to convert to from UTC
     utc = pytz.timezone('UTC')  
     value = utc.localize(value, is_dst=None).astimezone(pytz.utc)
