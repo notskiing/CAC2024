@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 import pymongo
 import pytz
-from pytz import timezone
+from pytz import *
 import tzlocal
 
 load_dotenv()
@@ -29,8 +29,7 @@ use = db.users
 @app.template_filter()
 
 def datetimefilter(value, format="%x %I:%M %p"):
-    if session["timezone"] == "":
-        session["timezone"] = "America/Los_Angeles"
+    session["timezone"] = "America/Los_Angeles"
     tz = pytz.timezone(session["timezone"]) # timezone you want to convert to from UTC
     utc = pytz.timezone('UTC')  
     value = utc.localize(value, is_dst=None).astimezone(pytz.utc)
@@ -60,7 +59,7 @@ def create():
         print(request.form, request.files)
         raw_image = request.files['image']
         image = base64.b64encode(raw_image.read())
-        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'image': image.decode()})
+        ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'size': k['size'], 'price': k['price'], 'color': k['color'],'image': image.decode()})
         return redirect('/dashboard')
 
 @app.route('/dashboard', methods=['GET','POST'])

@@ -5,8 +5,48 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>swapz - About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+      h1 {
+          font-size: calc(1.525rem + 3.3vw);
+      }
+      body {
+          background-color: #000000;
+          color: white;
+          font-family: "IBM Plex Sans JP", sans-serif;
+      }
+      .navbar {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .card {
+          border: none;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+          transition: transform 0.2s;
+      }
+      .card:hover {
+          transform: scale(1.02);
+      }
+      .card-img-top {
+          border-top-left-radius: 16px;
+          border-top-right-radius: 16px;
+          height: 200px;
+          object-fit: cover;
+      }
+      .card-title {
+          font-weight: 600;
+      }
+      .ibm-plex-sans-jp-regular {
+          font-family: "IBM Plex Sans JP", sans-serif;
+          font-weight: 400;
+          font-style: normal;
+      }
+  </style>
 </head>
 
 <body>
@@ -16,76 +56,20 @@
 
   <div class="text-center">
     <div class="cover-container d-flex p-3 col-md-8 mx-auto flex-column">
-      <h1>About Us!</h1>
-      <p>Who are we?</p>
-      <img height="385" width="300" src="../static/sid_saan.png" class="align-self-center">
+      <div class="container">
+        <div class="row">
+        <strong class="fs-3">Mission Statement</strong>
+        <div class="col">
+            <p>Every year, high schools have dances in which many students purchase a new outfit, only to wear
+                it once and toss it later. Buying clothes that will only be worn once or twice before being
+                disposed of is what fuels the fast fashion industry and thus creating more waste that harms
+                animals, environments, and the planet as a whole. Fast fashion is becoming (and already is) an
+                increasingly large contributor to unnecessary waste and pollution worldwide. Purchasing
+                lightly-used, pre-loved attire for formal events is a great way to connect with other students
+                as well as help keep both yours and their clothes out of the landfill.</p>
+        </div>
+        </div>
     </div>
-    <strong>FAQs</strong>
-    <div class="p-4 mx-auto">
-      <div class="accordion" id="accordionExample">
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-              aria-expanded="true" aria-controls="collapseOne">
-              Who are you all? Why did you make this application?
-            </button>
-          </h2>
-          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              We are <strong>Siddharth and Saanvi Kohli. We're twins and juniors in high school</strong>. We created swapz after realizing how much waste the fashion industry creates in the world around us, and after we realized we needed to use the resources we have to make a change. 
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              What is the point? Who is it for?
-            </button>
-          </h2>
-          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              Our app was made to reduce the amount of waste which fast fashion has in our community. It helps to reduce this by creating a <strong>safe, secure</strong> platform
-              where people can easily trade their clothing items with others for a more sustainable community in general.
-              
-              The target audience is mostly for high school students after their dances, or any of our Northern California community members who want to spice up their wardrobes! 
-              We plan on spreading word of mouth by posting QR codes to this site (when live) at our local libraries, schools, and other public locations.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              What sets your app apart from the rest?
-            </button>
-          </h2>
-          <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              <strong>Strong encryption and real time messaging.</strong> All users of our application are guaranteed encrypted usernames and passwords,
-              and nobody can access any of their data from the server side. Furthermore, it was really important to us that we use Python–based flask backend and real-time sockets communication software
-              to create a safe, up to date messaging area for users.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-              Credits
-            </button>
-          </h2>
-          <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              <strong> Development:</strong> Siddharth Kohli
-              <strong> Design, UI/UX:</strong> Saanvi Kohli
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
 
   {{macros.footer()}}
 
