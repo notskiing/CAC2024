@@ -12,3 +12,6 @@ python-dotenv==1.0.1
 pytz==2024.2
 tzlocal==5.2
 Werkzeug==2.0.2
+
+gunicorn 
+# gunicorn helps with running the app on linux
