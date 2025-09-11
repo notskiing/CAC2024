@@ -60,90 +60,60 @@ def create():
         raw_image = request.files['image']
         image = base64.b64encode(raw_image.read())
         ent.insert_one({'title': k['title'],'post': k['post'],'name': k['name'], 'time': timestamp, 'size': k['size'], 'price': k['price'], 'color': k['color'],'image': image.decode()})
-        return redirect('/dashboard')
+        return redirect('/')
 
-@app.route('/dashboard', methods=['GET','POST'])
-def dashboard():
-    if request.method == 'GET':
-        if "username" in session:
-            return render_template('dashboard.html')
-        else:
-            return redirect('/login')
+# @app.route('/login', methods=['GET','POST'])
+# def log():
+#     if request.method == 'GET':
+#         return render_template('login.html')
+#     if request.method == 'POST':
+#         print(request.form)
+#         username = request.form['username']
+#         password = request.form['password']
+#         user_tz = request.form['timezone']
+#         session["timezone"] = user_tz
+#         u = use.find_one({'username': username})
+#         if u != None:
+#             print('user exists, now finding password')
+#             if pbkdf2_sha256.verify(password, u['password']) == True:
+#                 print('login success!')
+#                 session["username"] = username
+#                 return redirect('/dashboard')
+#             else:
+#                 print('404, password not found')
+#                 return redirect('/login')
+#         else:
+#             print('404, user not found')
+#             return redirect('/login')
+#     return redirect('/login')
 
-@app.route('/login', methods=['GET','POST'])
-def log():
-    if request.method == 'GET':
-        return render_template('login.html')
-    if request.method == 'POST':
-        print(request.form)
-        username = request.form['username']
-        password = request.form['password']
-        user_tz = request.form['timezone']
-        session["timezone"] = user_tz
-        u = use.find_one({'username': username})
-        if u != None:
-            print('user exists, now finding password')
-            if pbkdf2_sha256.verify(password, u['password']) == True:
-                print('login success!')
-                session["username"] = username
-                return redirect('/dashboard')
-            else:
-                print('404, password not found')
-                return redirect('/login')
-        else:
-            print('404, user not found')
-            return redirect('/login')
-    return redirect('/login')
 
-@app.route('/messaging', methods=['GET','POST'])
-def messaging():
-    if request.method == 'GET':
-        return render_template('messaging.html')
-
-@app.route('/messaging/view', methods=['GET','POST'])
-def messaging_view():
-    if request.method == 'GET':
-        senders = []
-        id = request.args.get("id")
-        #fetch existing chat from db
-        all_messages = msg.find()
-        usable_messages = msg.find({
-            "$or":[{"sender": id, "receiver": session["username"]}, {"sender":session["username"], "receiver": id}]
-        })
-        senders = db.messages.distinct("sender")
-        for person in senders:
-            if person == session["username"]:
-                senders.remove(person)
-        return render_template('messagingview.html', messages=usable_messages, senders=senders)
-    if request.method == 'POST':
-        id = request.args.get("id")
-        print(request.form["message"])
-        message = {
-            "sender": session["username"],
-            "receiver": id,
-            "text": request.form["message"],
-            "timestamp": datetime.datetime.now(datetime.timezone.utc)
-        }
-        msg.insert_one(message)
-        return redirect("/messaging/view?id="+id)
-
-@app.route('/feed', methods=['GET','POST'])
-def feed():
-    if request.method == 'GET':
-        data = ent.find()
-        return render_template('feed.html', data=data)
-
-@app.route('/register', methods=['GET','POST'])
-def register(): 
-    if request.method == 'GET':
-        return render_template('register.html')
-    if request.method == 'POST':
-        print(request.form)
-        l = request.form
-        upw = pbkdf2_sha256.hash(l['pw'])
-        print(l['name'], upw) 
-        use.insert_one({'username': l['name'],'password': upw})
-        return redirect('/login')
+# @app.route('/messaging/view', methods=['GET','POST'])
+# def messaging_view():
+#     if request.method == 'GET':
+#         senders = []
+#         id = request.args.get("id")
+#         #fetch existing chat from db
+#         all_messages = msg.find()
+#         usable_messages = msg.find({
+#             "$or":[{"sender": id, "receiver": session["username"]}, {"sender":session["username"], "receiver": id}]
+#         })
+#         senders = db.messages.distinct("sender")
+#         for person in senders:
+#             if person == session["username"]:
+#                 senders.remove(person)
+#         return render_template('messagingview.html', messages=usable_messages, senders=senders)
+#     if request.method == 'POST':
+#         id = request.args.get("id")
+#         print(request.form["message"])
+#         message = {
+#             "sender": session["username"],
+#             "receiver": id,
+#             "text": request.form["message"],
+#             "timestamp": datetime.datetime.now(datetime.timezone.utc)
+#         }
+#         msg.insert_one(message)
+#         return redirect("/messaging/view?id="+id)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5500)
